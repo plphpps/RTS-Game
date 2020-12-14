@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d733be8ff249c49953995edb142274, type: 3}
+  m_Name: Create Villager
+  m_EditorClassIdentifier: 
+  completeTime: 5
+  costs:
+  - resourceType: 1
+    cost: 20
+  unitPrefab: {fileID: 8620711991983913539, guid: 899b3da593c79754cb8708af621aabfe, type: 3}
