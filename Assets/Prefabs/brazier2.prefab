@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3620608836057019647}
   - component: {fileID: 3620608836057019644}
   - component: {fileID: 3620608836057019645}
-  - component: {fileID: 3620608836057019646}
   m_Layer: 0
   m_Name: Flame
   m_TagString: Untagged
@@ -28,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3620608836057019616}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -0, z: 1.717}
-  m_LocalScale: {x: 1.8400588, y: 2.511304, z: 1.4683}
+  m_LocalScale: {x: 1.5, y: 2.511304, z: 1.5}
   m_Children: []
   m_Father: {fileID: 3869794881065288350}
   m_RootOrder: 0
@@ -82,19 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3620608836057019646
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3620608836057019616}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3620608836983299172
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,6 +91,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3620608836983299171}
   - component: {fileID: 3620608836983299170}
+  - component: {fileID: 1557198798}
+  - component: {fileID: 975513550144923597}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -187,6 +175,36 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1557198798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620608836983299172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f4ddfd8ce55b945bd92cd7a090ef71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxIntensity: 0.75
+  minIntensity: 0.2
+  speed: 0.25
+--- !u!114 &975513550144923597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620608836983299172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f4ddfd8ce55b945bd92cd7a090ef71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxIntensity: 0.75
+  minIntensity: 0.2
+  speed: 0.25
 --- !u!1 &4539511173614524452
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +216,7 @@ GameObject:
   - component: {fileID: 3869794881065288350}
   - component: {fileID: 151889172054576443}
   - component: {fileID: 2738022737700878833}
+  - component: {fileID: 4454287432310118577}
   m_Layer: 0
   m_Name: brazier2
   m_TagString: Untagged
@@ -212,7 +231,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4539511173614524452}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: 41.93, y: 0, z: 29.43}
   m_LocalScale: {x: 0.48920244, y: 0.48920244, z: 0.48920244}
   m_Children:
@@ -220,7 +239,7 @@ Transform:
   - {fileID: 3620608836983299171}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &151889172054576443
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -270,3 +289,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!208 &4454287432310118577
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4539511173614524452}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.133, y: 1.133, z: 1.217}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 1.2090001}
+  m_TimeToStationary: 0.5

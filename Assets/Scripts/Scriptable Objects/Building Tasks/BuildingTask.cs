@@ -10,18 +10,7 @@ public abstract class BuildingTask : ScriptableObject
     public float CompleteTime => completeTime;
 
     [SerializeField]
-    private TaskCost[] costs;
-
-    [System.Serializable]
-    private class TaskCost {
-        [SerializeField]
-        private ResourceType resourceType;
-        [SerializeField]
-        private int cost;
-
-        public ResourceType ResourceType => resourceType;
-        public int Cost => cost;
-    }
+    private ResourceCost[] costs;
 
     /// <summary>
     /// The results of starting a task.
@@ -33,7 +22,7 @@ public abstract class BuildingTask : ScriptableObject
         }
 
         // Remove the resource cost from what is stored.
-        foreach (TaskCost cost in costs) {
+        foreach (ResourceCost cost in costs) {
             GameController.Instance.RemoveResourceCount(cost.ResourceType, cost.Cost);
         }
     }
@@ -44,7 +33,7 @@ public abstract class BuildingTask : ScriptableObject
     /// <returns></returns>
     public virtual bool Prerequisites() {
         // Check if there is currently enough resources in store to cover the cost of the task.
-        foreach(TaskCost cost in costs) {
+        foreach(ResourceCost cost in costs) {
             int stored = GameController.Instance.GetResourceCount(cost.ResourceType);
 
             // There is not enough resource in store.

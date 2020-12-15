@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour, IDamageable
 {
+    [Header("Entity")]
     [Tooltip("What team the Entity is on. Value of negative one denotes neutral/unaligned.")]
     [SerializeField]
     private int team = -1;
@@ -18,6 +19,7 @@ public class Entity : MonoBehaviour, IDamageable
     private int health;
 
     private bool isDead;
+    public bool IsDead => isDead;
 
     // Start is called before the first frame update
     virtual protected void Start()
@@ -27,11 +29,10 @@ public class Entity : MonoBehaviour, IDamageable
     }
 
     public void TakeDamage(int damage) {
-        int newHealth = health - (damage - armor);
+        int clampedDamage = Mathf.Clamp(damage - armor, 1, damage); // Guarantee at least one damage.
+        health = health - clampedDamage;
 
-        newHealth = Mathf.Clamp(newHealth, 1, health); // Guarantee to do atleast 1 damage.
-
-        health = Mathf.Clamp(newHealth, 0, maxHealth); // Force health to be between 0 and maxHealth
+        health = Mathf.Clamp(health, 0, maxHealth); // Force health to be between 0 and maxHealth
 
         if(health == 0) {
             Die();
@@ -40,5 +41,7 @@ public class Entity : MonoBehaviour, IDamageable
 
     protected virtual void Die() {
         isDead = true;
+        // TODO: Add animation for death
+        Destroy(this.gameObject, 0.1f);
     }
 }

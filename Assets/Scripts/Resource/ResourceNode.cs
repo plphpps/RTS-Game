@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceNode : MonoBehaviour
+public class ResourceNode : MonoBehaviour, IObstacle
 {
     [SerializeField]
     private ResourceType resourceType;
@@ -12,6 +12,9 @@ public class ResourceNode : MonoBehaviour
     [SerializeField]
     private int maxStore;
 
+    private Collider col;
+    public Collider ObstacleCollider => col;
+
     private int currentStore;
     private bool isDepleated;
     public bool IsDepledted => isDepleated;
@@ -19,6 +22,8 @@ public class ResourceNode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        col = GetComponent<Collider>();
+
         currentStore = maxStore;
         isDepleated = false;
     }

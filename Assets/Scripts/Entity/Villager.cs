@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Villager : Unit
 {
+    [Header("Villager")]
     [SerializeField]
     private int carryingCapacity = 10; // The maximum amount a villager can carry.
 
@@ -33,6 +34,31 @@ public class Villager : Unit
         base.Update();
     }
 
+    #region Building Behaviour
+    public void Build(Building building) {
+        // Start Building
+        StopAllCoroutines();
+        StartCoroutine(ContructBuilding(building));
+    }
+
+    private IEnumerator ContructBuilding(Building building) {
+        Vector3 buildPos = building.ObstacleCollider.ClosestPoint(transform.position);
+
+        // Move to building location. Wait to build until arrived.
+        yield return StartCoroutine(MoveToPoint(buildPos));
+
+        // Wait until building is finished building
+        while (!building.IsBuilt) {
+            building.UpdateBuildTime();
+            yield return new WaitForSeconds(1.0f);
+        }
+
+        // Done working
+        yield break;
+    }
+    #endregion
+
+    #region Collect/Gather Behaviour
     /// <summary>
     /// Commands the villager to collect from a given resource node until it and surrounding nodes are depleted.
     /// </summary>
@@ -54,7 +80,8 @@ public class Villager : Unit
     }
 
     private IEnumerator CollectNode(ResourceNode node) {
-        Vector3 nodePos = node.transform.position;
+        // Find closest point to node.
+        Vector3 nodePos = node.ObstacleCollider.ClosestPoint(transform.position);
 
         // Move to selected node. Wait to collect until arrived.
         yield return StartCoroutine(MoveToPoint(nodePos));
@@ -107,19 +134,6 @@ public class Villager : Unit
     }
 
     /// <summary>
-    /// Coroutine that moves the Villager to the specified point.
-    /// </summary>
-    /// <param name="point"></param>
-    /// <returns></returns>
-    private IEnumerator MoveToPoint(Vector3 point) {
-        Agent.SetDestination(point);
-        yield return new WaitForSeconds(0.1f);
-        while (Agent.velocity != Vector3.zero) {
-            yield return null; // wait
-        }
-    }
-
-    /// <summary>
     /// Drop off the Villager's current load, updating the amount of resources currently stored.
     /// </summary>
     private IEnumerator DropOff(Building dropPoint) {
@@ -130,7 +144,7 @@ public class Villager : Unit
         }
 
         // Move to drop off point
-        yield return StartCoroutine(MoveToPoint(dropPoint.transform.position));
+        yield return StartCoroutine(MoveToPoint(dropPoint.ObstacleCollider.ClosestPoint(transform.position)));
 
         // Drop off
         Debug.Log("Villager " + name + " dropped off " + carryingAmount + " " + resourceType.ToString() + " to " + dropPoint.name + ".");
@@ -181,7 +195,7 @@ public class Villager : Unit
             Building building = col.GetComponent<Building>();
             // If the col isn't a building or the building doesn't allow us to drop off our resource, skip it.
             // Resource type is a Flag enum, meaning it can have multiple values. So we use a bitwise and to check if the building includes our resource type.
-            if (building == null || Team != building.Team || ((resourceType & building.ResourceType) != resourceType)) continue;
+            if (building == null || !building.enabled || Team != building.Team || ((resourceType & building.ResourceType) != resourceType)) continue;
 
             float dist = Vector3.Distance(transform.position, building.transform.position);
             if (dist < minDist) {
@@ -199,7 +213,7 @@ public class Villager : Unit
             foreach (Building build in dropOffs) {
                 // If the col isn't a building or the building doesn't allow us to drop off our resource, skip it.
                 // Resource type is a Flag enum, meaning it can have multiple values. So we use a bitwise and to check if the building includes our resource type.
-                if (Team != build.Team || (resourceType & build.ResourceType) != resourceType) continue;
+                if (!build.enabled || Team != build.Team || (resourceType & build.ResourceType) != resourceType) continue;
 
                 float dist = Vector3.Distance(transform.position, build.transform.position);
                 if (dist < minDist) {
@@ -211,4 +225,5 @@ public class Villager : Unit
 
         return closest;
     }
+    #endregion
 }

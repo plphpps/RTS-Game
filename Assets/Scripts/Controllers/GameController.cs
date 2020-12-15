@@ -57,9 +57,31 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Pause (Esc)
         if (Input.GetKeyDown(KeyCode.Escape)) {
             isPaused = !isPaused;
         }
+
+        // Enable Debugging (`/~)
+        if (Input.GetKeyDown(KeyCode.BackQuote)) {
+            debugging = !debugging;
+            Debug.Log("DEBUGGING: " + debugging);
+        }
+
+        // Add Resource Cheat Code (=/+)
+        if (debugging && Input.GetKeyDown(KeyCode.Equals)) {
+            AddResources(100);
+        }
+    }
+
+    /// <summary>
+    /// Debugging tool to add resources to store.
+    /// </summary>
+    private void AddResources(int amount) {
+        AddResourceCount(ResourceType.food, amount);
+        AddResourceCount(ResourceType.wood, amount);
+        AddResourceCount(ResourceType.gold, amount);
+        AddResourceCount(ResourceType.stone, amount);
     }
 
     /// <summary>
@@ -128,5 +150,19 @@ public class GameController : MonoBehaviour
                 Debug.LogError("Get Resourse Count Error: Invalid resource type.");
                 return -1;
         }
+    }
+
+    /// <summary>
+    /// Checks if there are enough resources availble in the stores to meet the provided costs.
+    /// </summary>
+    /// <param name="costs"></param>
+    /// <returns></returns>
+    public bool CheckResourceCost(ResourceCost[] costs) {
+        foreach(ResourceCost cost in costs) {
+            if ((GetResourceCount(cost.ResourceType) - cost.Cost) < 0)
+                return false;
+        }
+
+        return true;
     }
 }

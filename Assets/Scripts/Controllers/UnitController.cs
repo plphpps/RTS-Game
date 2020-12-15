@@ -20,6 +20,12 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private float unitTightnessRadius;
 
+    [Tooltip("List of buildings that can be placed by the player.")]
+    [SerializeField]
+    private GameObject[] buildingPrefabs;
+
+    private bool isBuilding;
+
     // Mouse Positions
     private Vector3 startMousePos;          // The starting mouse point in Screen Space
     private Vector3 startMouseWorldPos;     // The starting mouse point in World Space
@@ -36,6 +42,7 @@ public class UnitController : MonoBehaviour
         startMousePos = Input.mousePosition;
         startMouseWorldPos = Crosshair.MouseToWorldPos();
         boxSelection.gameObject.SetActive(false);
+        isBuilding = false;
 
         selectedUnits = new List<Unit>();
     }
@@ -43,8 +50,10 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TODO: Allow for selection of singular units (i.e. clicking a single unit vs always having to box select).
-
+        // If we're building don't accept user input from here.
+        if (isBuilding)
+            return;
+        
         // LMB has been pressed
         if (Input.GetMouseButtonDown(0)) {
             startMousePos = Input.mousePosition;
@@ -74,6 +83,35 @@ public class UnitController : MonoBehaviour
         }
 
         // TODO: Add Villager Commands (Build, etc.)
+        // Create House
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            // Check if we have enough resources to build
+            if (!GameController.Instance.CheckResourceCost(buildingPrefabs[0].GetComponent<Building>().BuildCosts)) {
+                Debug.Log("Not enough resources to build: " + buildingPrefabs[0].name);
+                return;
+            }
+
+            // Check if we have villagers selected to build.
+            if (IsVillagerSelected())
+                StartCoroutine(PlaceBuilding(buildingPrefabs[0]));
+            else
+                Debug.Log("Cannot build: " + buildingPrefabs[0].name + " as there are no villagers selected.");
+        }
+
+        // Create Barracks
+        if (Input.GetKeyDown(KeyCode.W)) {
+            // Check if we have enough resources to build
+            if (!GameController.Instance.CheckResourceCost(buildingPrefabs[1].GetComponent<Building>().BuildCosts)) {
+                Debug.Log("Not enough resources to build: " + buildingPrefabs[1].name);
+                return;
+            }
+
+            // Check if we have villagers selected to build.
+            if (IsVillagerSelected())
+                StartCoroutine(PlaceBuilding(buildingPrefabs[1]));
+            else
+                Debug.Log("Cannot build: " + buildingPrefabs[1].name + " as there are no villagers selected.");
+        }
     }
 
     private void OnDrawGizmos() {
@@ -85,6 +123,7 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    #region Commanding Units
     /// <summary>
     /// Update the box selection UI.
     /// </summary>
@@ -168,15 +207,14 @@ public class UnitController : MonoBehaviour
         if (targetCol == null)
             return;
 
-        // Stop villagers from working if they recieve a new command.
+        // Stop units current task if they recieve a new command.
         selectedUnits.ForEach(u => {
-            Villager vil = u.GetComponent<Villager>();
-            if (vil != null)
-                vil.StopAllCoroutines();
+            u.StopAllCoroutines();
         });
 
         // DEBUGGING
-        print(targetCol.name);
+        if(GameController.Instance.Debugging)
+            print(targetCol.name);
 
         // Attack
         if (targetCol.GetComponent<Entity>()) {
@@ -205,7 +243,9 @@ public class UnitController : MonoBehaviour
         if (target.Team == playerTeam)
             return;
 
-        // Attack the target
+        selectedUnits.ForEach(u => {
+            u.Attack(target);
+        });
     }
 
     /// <summary>
@@ -251,5 +291,83 @@ public class UnitController : MonoBehaviour
                 u.Agent.SetDestination(point + offset);
             });
         }
+    }
+    #endregion
+
+    #region Build Command
+    private IEnumerator PlaceBuilding(GameObject buildingPrefab) {
+        isBuilding = true;
+
+        // Create the building
+        Vector3 offset = new Vector3(0, buildingPrefab.transform.position.y, 0);
+        GameObject building = Instantiate(buildingPrefab, Crosshair.MouseToWorldPos() + offset, buildingPrefab.transform.rotation);
+        Collider col = building.GetComponent<Collider>();
+        Building b = building.GetComponent<Building>();
+        b.enabled = false;
+
+        // Make sure a building component is attached
+        if(b == null) {
+            Debug.LogWarning("Place Building Error: Provided building gameObject does not have Building component attached.");
+            yield break;
+        }
+
+        // While we're still building, update the building to be at the mouse position and check for collisions
+        while (isBuilding) {
+            building.transform.position = Crosshair.MouseToWorldPos() + offset;
+
+            // Try to place building if LMB is pressed
+            if (Input.GetMouseButtonDown(0)) {
+                // Check if the building's collider is overlapping with anything other than the ground and itself before placing
+                Collider[] cols = Physics.OverlapBox(building.transform.position, col.bounds.extents);
+                if (cols.Length > 2) {
+                    Debug.Log("Not enough space to place: " + building.name + "here.");
+                    yield return new WaitForFixedUpdate(); // Wait for end of fixed update to prevent freeze
+                    continue;
+                }
+
+                // If there was space, command the selected villagers to build the building.
+                selectedUnits.ForEach(u => {
+                    Villager vil = u.GetComponent<Villager>();
+
+                    if (vil != null)
+                        vil.Build(b);
+                });
+
+                b.StartBuilding();
+
+                isBuilding = false;
+                yield break;
+            }
+
+            // Cancel build if RMB is pressed
+            if (Input.GetMouseButtonDown(1)) {
+                Debug.Log("RMB pressed.");
+                Destroy(building);
+                // wait a moment before setting is building to false, so that selected units don't try and follow commands
+                yield return new WaitForSeconds(0.1f);
+                isBuilding = false;
+                yield break;
+            }
+
+            // Wait for end of fixed update to prevent freeze
+            yield return new WaitForFixedUpdate();
+        }
+
+        // Done
+        yield break;
+    }
+    #endregion
+
+    /// <summary>
+    /// Checks if there are villagers in the currently selected units.
+    /// </summary>
+    /// <returns>Returns true if there are villagers in the currently selected units. Returns false if there are no villagers selected.</returns>
+    private bool IsVillagerSelected() {
+        foreach(Unit u in selectedUnits) {
+            if (u.GetComponent<Villager>())
+                return true;
+        }
+
+        return false;
     }
 }

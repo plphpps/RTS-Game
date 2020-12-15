@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Water
-  m_Shader: {fileID: 4800000, guid: fc739902fbe9b9d4399ab214d06609ac, type: 3}
+  m_Name: Horns
+  m_Shader: {fileID: 4800000, guid: 606094ab3b5abe34d9d441edd78326ec, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,10 +20,6 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DepthRampTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -51,10 +47,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: d60d6f2d4a74f424f98e3c26738be8a4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -63,52 +55,26 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SurfaceDistortion:
-        m_Texture: {fileID: 2800000, guid: d60d6f2d4a74f424f98e3c26738be8a4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SurfaceNoise:
-        m_Texture: {fileID: 2800000, guid: d60d6f2d4a74f424f98e3c26738be8a4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Amplitude: 0.2
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DepthFactor: 1
-    - _DepthMaxDistance: 1.44
     - _DetailNormalMapScale: 1
-    - _DistortStrength: 1
     - _DstBlend: 0
-    - _ExtraHeight: -0.23
-    - _FoamMaxDistance: 0.4
-    - _FoamMinDistance: 0.04
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OutlineWidth: 0.03
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 20
     - _SrcBlend: 1
-    - _SurfaceDistortionAmount: 0.576
-    - _SurfaceNoiseCutoff: 0.777
     - _UVSec: 0
-    - _WaveAmp: 0.2
-    - _WaveLength: 20.93
-    - _WaveSpeed: -22.91
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.23113209, g: 0.4522818, b: 1, a: 1}
-    - _DeepColor: {r: 0.05900677, g: 0.2959015, b: 0.735849, a: 0.749}
-    - _DepthGradientDeep: {r: 0.22895, g: 0.48271024, b: 0.95, a: 0.5372549}
-    - _DepthGradientShallow: {r: 0.5330188, g: 0.697985, b: 1, a: 0.5137255}
-    - _EdgeColor: {r: 0.34109113, g: 0.5266556, b: 0.990566, a: 1}
+    - _Color: {r: 0.8235295, g: 0.64705884, b: 0.5019608, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShallowColor: {r: 0.5424528, g: 0.7025943, b: 1, a: 0.725}
-    - _SurfaceNoiseScroll: {r: 0.02, g: 0.03, b: 0, a: 0}
+    - _OutlineColor: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
