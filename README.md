@@ -3,4 +3,4 @@
  
  C#/Game logic code can be found under Assets/Scripts. Shader code can be found under Assets/Materials/Shaders.
  
- Game Builds can be found in releases for Windows and Mac.
+ Game Builds can be found in releases for Windows, Mac, and Linux.
